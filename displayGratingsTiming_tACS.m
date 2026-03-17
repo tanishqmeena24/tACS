@@ -1,3 +1,4 @@
+
 hotkey('x','escape_screen(); assignin(''caller'',''continue_'',false);');
 
 set_bgcolor([0.5 0.5 0.5]);
@@ -14,11 +15,11 @@ end
 stim_per_trial = 3;
 stim = 1:stim_per_trial;
 
-wait_for_fix = 1000;
-hold_fix = 1000;
-stimulus_duration = 800;
-isi_duration = 700;
-pulse_duration = 50;
+wait_for_fix = 2000;
+hold_fix = 1250;
+stimulus_duration = 1250;
+isi_duration = 1250;
+pulse_duration = 300;
 
 fix_size = 0.2;
 fix_color = [1 1 1];
@@ -59,16 +60,26 @@ wth2.HoldTime = hold_fix;
 
 sceneHold = create_scene(wth2);
 
+sceneStim= cell(1, stim_per_trial);
 
-stimAdapter = tACSStimulator(wth3);
-
-stimAdapter.StartJSON = TrialRecord.User.JSONstartStimulation;
-stimAdapter.StopJSON  = TrialRecord.User.JSONstopStimulation;
-
-stimAdapter.outlet = TrialRecord.User.outlet;
-
-sceneStim{i} = create_scene(stimAdapter, stim(i));
-
+for i = 1:stim_per_trial
+    fix3 = SingleTarget(tracker);
+    fix3.Target = fixation_point;
+    fix3.Threshold = fix_window;
+    
+    wth3 = WaitThenHold(fix3);
+    wth3.WaitTime = 0;
+    wth3.HoldTime = stimulus_duration;
+    
+    stimAdapter = tACSStimAdapter(wth3);
+    
+    stimAdapter.StartJSON = TrialRecord.User.JSONstartStimulation;
+    stimAdapter.StopJSON  = TrialRecord.User.JSONstopStimulation;
+    
+    stimAdapter.outlet = TrialRecord.User.outlet;
+    
+    sceneStim{i} = create_scene(stimAdapter, stim(i));
+end
 
 fix4 = SingleTarget(tracker);
 fix4.Target = fixation_point;
@@ -79,7 +90,6 @@ wth4.WaitTime = 0;
 wth4.HoldTime = isi_duration;
 
 sceneISI = create_scene(wth4);
-
 
 error_type = 0;
 flag = 0;
@@ -94,21 +104,12 @@ while true
 
     for i = 1:stim_per_trial
 
-        if tacs_enable
-            outlet.push_sample({TrialRecord.User.JSONstartStimulation});
-            eventmarker(30);
-        end
-
         run_scene(sceneStim{i},20);
 
         if ~wth3.Success
             error_type = 3;
             flag = 1;
             break;
-        end
-
-        if tacs_enable
-            outlet.push_sample({TrialRecord.User.JSONstopStimulation});
         end
 
         if i < stim_per_trial
