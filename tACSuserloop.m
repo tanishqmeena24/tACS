@@ -1,3 +1,4 @@
+
 function [C,timingfile,userdefined_trialholder] = tACSuserloop(~,TrialRecord)
 
 C = [];
@@ -26,7 +27,6 @@ if isempty(stimTable)
     % Initialize LSL outlet
     % -----------------------------
     if isempty(lsl_init)
-
         Start_up();          % your LSL initialization script
         TrialRecord.User.outlet = outlet;
         lsl_init = true;
@@ -35,11 +35,9 @@ if isempty(stimTable)
         disp('1. Open stimulation GUI')
         disp('2. Login to GUI')
         disp('3. Connect GUI to stimulation device')
-        disp('Press ENTER when ready')
         disp('------------------------------------------')
 
-        pause;
-
+        pause(10);
     end
 
     % -----------------------------
@@ -47,14 +45,15 @@ if isempty(stimTable)
     % -----------------------------
     if isempty(tacs_loaded)
 
-        tacs_parameters_script    % <-- your JSON parameter script
+        tacs_params    % <-- your JSON parameter script
 
         TrialRecord.User.JSONIntensity = JSONIntensity;
         TrialRecord.User.JSONtACS = JSONtACS;
         TrialRecord.User.JSONDuration = JSONDuration;
         TrialRecord.User.JSONDelay = JSONDelay;
         TrialRecord.User.JSONRampUp = JSONRampUp;
-        TrialRecord.User.JSONaddChannel = JSONaddChannel;
+        TrialRecord.User.JSONaddChannel2 = JSONaddChannel2;
+        TrialRecord.User.JSONaddChannel14 = JSONaddChannel14;
         TrialRecord.User.JSONLoad = JSONLoad;
         TrialRecord.User.JSONstartStimulation = JSONstartStimulation;
         TrialRecord.User.JSONstopStimulation = JSONstopStimulation;
@@ -65,7 +64,10 @@ if isempty(stimTable)
         outlet.push_sample({JSONDuration}); pause(0.5)
         outlet.push_sample({JSONDelay}); pause(0.5)
         outlet.push_sample({JSONRampUp}); pause(0.5)
-        outlet.push_sample({JSONaddChannel}); pause(0.5)
+        outlet.push_sample({JSONaddChannel2}); pause(0.5)
+        outlet.push_sample({JSONaddChannel14}); pause(0.5)
+        outlet.push_sample({JSONFrequency2}); pause(0.5)
+        outlet.push_sample({JSONFrequency14}); pause(0.5)
         outlet.push_sample({JSONLoad}); pause(0.5)
 
         tacs_loaded = true;
@@ -98,6 +100,7 @@ end
 
 
 stim_per_trial = 3;
+TrialRecord.User.stim_per_trial = stim_per_trial;
 
 if isfield(TrialRecord,'CurrentBlock')
     block = TrialRecord.CurrentBlock;
