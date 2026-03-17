@@ -1,4 +1,5 @@
-classdef tACSStimulator < mladapter
+
+classdef tACSStimAdapter < mladapter
 
     properties
         StartJSON
@@ -12,7 +13,7 @@ classdef tACSStimulator < mladapter
 
     methods
 
-        function obj = tACSStimulator(varargin)
+        function obj = tACSStimAdapter(varargin)
             obj = obj@mladapter(varargin{:});
         end
 
@@ -25,6 +26,7 @@ classdef tACSStimulator < mladapter
             if ~obj.stim_started
                 obj.outlet.push_sample({obj.StartJSON});
                 obj.stim_started = true;
+                disp('START')
             end
 
             continue_ = obj.Adapter.analyze(p);
@@ -32,6 +34,7 @@ classdef tACSStimulator < mladapter
             if ~continue_ && obj.stim_started
                 obj.outlet.push_sample({obj.StopJSON});
                 obj.stim_started = false;
+                disp('STOP')
             end
 
         end
@@ -42,6 +45,7 @@ classdef tACSStimulator < mladapter
             if obj.stim_started
                 obj.outlet.push_sample({obj.StopJSON});
                 obj.stim_started = false;
+                disp('STOP')
             end
 
         end
