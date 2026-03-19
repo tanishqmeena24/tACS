@@ -17,9 +17,9 @@ stim = 1:stim_per_trial;
 
 wait_for_fix = 2000;
 hold_fix = 1250;
-stimulus_duration = 1250;
-isi_duration = 1250;
-pulse_duration = 300;
+stimulus_duration = 3000; %1250;
+isi_duration = 700; %1250;
+pulse_duration = 50; %300;
 
 fix_size = 0.2;
 fix_color = [1 1 1];
@@ -62,22 +62,53 @@ sceneHold = create_scene(wth2);
 
 sceneStim= cell(1, stim_per_trial);
 
+fix3 = SingleTarget(tracker);
+fix3.Target = fixation_point;
+fix3.Threshold = fix_window;
+
+wth3 = WaitThenHold(fix3);
+wth3.WaitTime = 0;
+wth3.HoldTime = stimulus_duration;
+
+% % 
+stimAdapter = tACSStimAdapter(wth3,...   %(null_,...
+    TrialRecord.User.JSONstartStimulation,...
+    TrialRecord.User.JSONstopStimulation,...
+    TrialRecord.User.JSONLoad,...
+    TrialRecord.User.outlet);
+
+% stimAdapter.StartJSON = TrialRecord.User.JSONstartStimulation;
+% stimAdapter.StopJSON  = TrialRecord.User.JSONstopStimulation;
+% 
+% stimAdapter.outlet = TrialRecord.User.outlet;
+
+% 
+% con3 = Concurrent(wth3);
+% con3.add(stimAdapter);
+    
 for i = 1:stim_per_trial
-    fix3 = SingleTarget(tracker);
-    fix3.Target = fixation_point;
-    fix3.Threshold = fix_window;
-    
-    wth3 = WaitThenHold(fix3);
-    wth3.WaitTime = 0;
-    wth3.HoldTime = stimulus_duration;
-    
-    stimAdapter = tACSStimAdapter(wth3);
-    
-    stimAdapter.StartJSON = TrialRecord.User.JSONstartStimulation;
-    stimAdapter.StopJSON  = TrialRecord.User.JSONstopStimulation;
-    
-    stimAdapter.outlet = TrialRecord.User.outlet;
-    
+    % fix3 = SingleTarget(tracker);
+    % fix3.Target = fixation_point;
+    % fix3.Threshold = fix_window;
+    % 
+    % wth3 = WaitThenHold(fix3);
+    % wth3.WaitTime = 0;
+    % wth3.HoldTime = stimulus_duration;
+    % 
+    % % % 
+    % stimAdapter = tACSStimAdapter(null_,...
+    %     TrialRecord.User.JSONstartStimulation,...
+    %     TrialRecord.User.JSONstopStimulation,...
+    %     TrialRecord.User.outlet);
+    % 
+    % % stimAdapter.StartJSON = TrialRecord.User.JSONstartStimulation;
+    % % stimAdapter.StopJSON  = TrialRecord.User.JSONstopStimulation;
+    % % 
+    % % stimAdapter.outlet = TrialRecord.User.outlet;
+    % 
+    % con3 = Concurrent(wth3);
+    % con3.add(stimAdapter);
+    % 
     sceneStim{i} = create_scene(stimAdapter, stim(i));
 end
 
@@ -142,4 +173,5 @@ if error_type ~=0
 end
 
 trialerror(error_type);
-set_iti(1000);
+disp('trial done');
+set_iti(3000) %1000);
