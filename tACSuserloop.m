@@ -53,7 +53,7 @@ if isempty(stimTable)
         TrialRecord.User.JSONDelay = JSONDelay;
         TrialRecord.User.JSONRampUp = JSONRampUp;
         TrialRecord.User.JSONaddChannel2 = JSONaddChannel2;
-        TrialRecord.User.JSONaddChannel14 = JSONaddChannel14;
+        % TrialRecord.User.JSONaddChannel14 = JSONaddChannel14;
         TrialRecord.User.JSONLoad = JSONLoad;
         TrialRecord.User.JSONstartStimulation = JSONstartStimulation;
         TrialRecord.User.JSONstopStimulation = JSONstopStimulation;
@@ -65,9 +65,9 @@ if isempty(stimTable)
         outlet.push_sample({JSONDelay}); pause(0.5)
         outlet.push_sample({JSONRampUp}); pause(0.5)
         outlet.push_sample({JSONaddChannel2}); pause(0.5)
-        outlet.push_sample({JSONaddChannel14}); pause(0.5)
+        % outlet.push_sample({JSONaddChannel14}); pause(0.5)
         outlet.push_sample({JSONFrequency2}); pause(0.5)
-        outlet.push_sample({JSONFrequency14}); pause(0.5)
+        % outlet.push_sample({JSONFrequency14}); pause(0.5)
         outlet.push_sample({JSONLoad}); pause(0.5)
 
         tacs_loaded = true;
@@ -101,6 +101,8 @@ end
 
 stim_per_trial = 3;
 TrialRecord.User.stim_per_trial = stim_per_trial;
+
+% outlet.push_sample({JSONLoad}); pause(0.01);
 
 if isfield(TrialRecord,'CurrentBlock')
     block = TrialRecord.CurrentBlock;
